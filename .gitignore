@@ -1,0 +1,20 @@
+# Build artifacts, derived data, packaged DMG
+build/
+DerivedData/
+*.dmg
+
+# Xcode project is generated from project.yml by XcodeGen — run `xcodegen generate`
+TP25Studio.xcodeproj/
+
+# Xcode/user cruft
+*.xcuserstate
+xcuserdata/
+*.xcscmblueprint
+.swiftpm/
+.build/
+
+# macOS
+.DS_Store
+
+# Captures may contain device data — keep out of the repo
+*.pklg

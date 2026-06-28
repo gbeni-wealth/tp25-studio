@@ -1,0 +1,88 @@
+name: TP25Studio
+options:
+  bundleIdPrefix: com.gbeniwealth
+  deploymentTarget:
+    iOS: "17.0"
+    macOS: "14.0"
+  createIntermediateGroups: true
+
+packages:
+  TP25Kit:
+    path: TP25Kit
+
+settings:
+  base:
+    # Swift 6 toolchain, Swift 5 language mode (matches TP25Kit's
+    # swiftLanguageModes: [.v5]). Strict-concurrency migration is the tracked
+    # next step — see README. Bump to "6.0" after migrating the apps.
+    SWIFT_VERSION: "5.0"
+    MARKETING_VERSION: "0.1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    # Set your Apple Developer team ID before building for device:
+    DEVELOPMENT_TEAM: ""
+
+targets:
+  TP25Studio-iOS:
+    type: application
+    platform: iOS
+    sources:
+      - Apps/iOS/Sources
+    dependencies:
+      - package: TP25Kit
+        product: TP25Kit
+    info:
+      path: Apps/iOS/Resources/Info.plist
+      properties:
+        CFBundleDisplayName: TP25 Studio
+        UILaunchScreen: {}
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+        NSBluetoothAlwaysUsageDescription: >-
+          TP25 Studio uses Bluetooth to discover and control your SuteFoto
+          TP25 lights.
+        NSMicrophoneUsageDescription: >-
+          The microphone is used only for Music Reactive mode, to drive light
+          colours from sound. Audio is never recorded or stored.
+        UIBackgroundModes:
+          - bluetooth-central
+    # NOTE: CloudKit/iCloud entitlements are intentionally omitted so the app
+    # builds and runs with a FREE Apple account. The app falls back to local
+    # storage automatically. To enable iCloud sync, see docs/SETUP.md and add
+    # the iCloud entitlements + a paid team here, then re-run `xcodegen generate`.
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.yourteam.tp25studio
+        TARGETED_DEVICE_FAMILY: "1"
+        CODE_SIGN_STYLE: Automatic
+
+  TP25Studio-macOS:
+    type: application
+    platform: macOS
+    sources:
+      - Apps/macOS/Sources
+    dependencies:
+      - package: TP25Kit
+        product: TP25Kit
+    info:
+      path: Apps/macOS/Resources/Info.plist
+      properties:
+        CFBundleDisplayName: TP25 Studio
+        NSBluetoothAlwaysUsageDescription: >-
+          TP25 Studio uses Bluetooth to discover, analyse, and control your
+          SuteFoto TP25 lights.
+        NSMicrophoneUsageDescription: >-
+          The microphone is used only for Music Reactive mode, to drive light
+          colours from sound. Audio is never recorded or stored.
+    # Sandbox + Bluetooth + mic + file access only — no iCloud, so it builds
+    # with a free account / "Sign to Run Locally". Add CloudKit later per docs/SETUP.md.
+    entitlements:
+      path: Apps/macOS/TP25StudioMac.entitlements
+      properties:
+        com.apple.security.app-sandbox: true
+        com.apple.security.device.bluetooth: true
+        com.apple.security.device.audio-input: true
+        com.apple.security.files.user-selected.read-write: true
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.yourteam.tp25studio.mac
+        CODE_SIGN_STYLE: Automatic
